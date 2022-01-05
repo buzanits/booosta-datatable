@@ -1,0 +1,24 @@
+{
+    "name": "booosta/datatable",
+    "description": "HTML and JS Datatable for Booosta PHP Framework",
+    "license": "LGPL-3.0-only",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "booosta\\datatable\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Peter Buzanits",
+            "email": "peter@icb.at"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0.0",
+        "datatables.net/datatables.net-dt": "dev-master",
+        "booosta/webapp": "dev-master",
+        "booosta/ui": "dev-master"
+    }
+}
