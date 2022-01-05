@@ -1,8 +1,6 @@
-# Dataobjects module for the Booosta PHP Framework
+# HTML and JS Datatable for Booosta PHP Framework
 
-This module provides data objects funtionallity for the Booosta PHP Framework. Data objects are some kind
-of model in Booosta. A data objects represents a database row in a particular table. The data can be 
-manipulated and saved/deleted via the object methods.
+This module provides a JS datatable for PHP Booosta which uses datatables.net
 
 Booosta allows to develop PHP web applications quick. It is mainly designed for small web applications.
 It does not provide a strict MVC distinction. Although the MVC concepts influence the framework. Templates,
