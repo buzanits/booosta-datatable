@@ -2,6 +2,7 @@
 namespace booosta\datatable;
 \booosta\Framework::init_module('datatable');
 
+
 class Datatable extends \booosta\ui\UI
 {
   use moduletrait_datatable;
@@ -14,8 +15,9 @@ class Datatable extends \booosta\ui\UI
   protected $lightmode = false;
   protected $use_form;
   protected $statesave = true;
-  protected $tableclass = 'table table-striped';
+  protected $tableclass = 'table table-striped display responsive';
   protected $ajaxurl;
+  protected $omit_columns = [];    // omitted in mobile devices
 
 
   public function __construct($id = 'datatable', $data = null, $autoheader = false)
@@ -23,7 +25,8 @@ class Datatable extends \booosta\ui\UI
     parent::__construct($id);
     $this->data = $data;
     $this->autoheader = $autoheader;
-    $this->display_length = '25';
+    $this->display_length = $this->config('datatable_display_length') ?? '25';
+    #\booosta\debug($this->display_length);
 
     if(is_bool($this->config('datatable_statesave'))) $this->statesave = $this->config('datatable_statesave');
   }
@@ -55,6 +58,16 @@ class Datatable extends \booosta\ui\UI
   public function set_thead_class($data) { $this->thead_class = $data; }
   public function set_tr_class($data) { $this->tr_class = $data; }
 
+  public function set_omit_columns($data) { $this->omit_columns = $data; }
+  public function add_omit_column($data) { $this->omit_columns[] = $data; }
+
+
+  public function get_html_includes($libpath = 'lib/modules/datatable')
+  {
+    return "<script type='text/javascript' src='$libpath/datatables.min.js'></script>
+             <style type='text/css' title='currentStyle'> @import '$libpath/datatables.min.css' </style>";
+  }
+
 
   public function get_js() 
   { 
@@ -85,7 +98,8 @@ class Datatable extends \booosta\ui\UI
       var datatable_$this->id = $('#datatable_$this->id').dataTable({
       $optcode $ajaxcode
       'bJQueryUI': true, 'bPaginate': true, 'sPaginationType': 'full_numbers',
-      'iDisplayLength': $this->display_length, 'bInfo': false, 'aaSorting': [],
+      'pageLength': $this->display_length, 'bInfo': false, 'aaSorting': [],
+      'responsive': { 'details': false },
       'language': {
         'search': '$ss:', 'lengthMenu': '$lenghtMenu', 'emptyTable': '$nodata', 'zeroRecords': '$nodata',
         'oPaginate': { 'sNext': '&gt;', 'sLast': '&gt;&gt;', 'sFirst': '&lt;&lt;', 'sPrevious': '&lt;' }
@@ -168,7 +182,13 @@ class Datatable extends \booosta\ui\UI
     
     if(is_array($this->data['header'])):
       $code .= "<thead $thead_class><tr>";
-      foreach($this->data['header'] as $header) $code .= "<th>$header</th>";
+
+      #debug($this->omit_columns);
+      foreach($this->data['header'] as $header):
+        $thclass = in_array($header, $this->omit_columns) ? 'class="min-phone-l"' : 'class="all"';
+        $code .= "<th $thclass>$header</th>";
+      endforeach;
+
       $code .= '</tr></thead>';
 
       $this->tabledata = $this->data['data'];  // if ['header'] exists, also ['data'] must exist in $this->data
@@ -177,6 +197,8 @@ class Datatable extends \booosta\ui\UI
 
       // get size of longest array in data and fill header with <th> elements of this number
       $maxsize = 0;
+      $header = '';
+
       foreach($this->tabledata as $dat) $maxsize = max($maxsize, sizeof($dat));
       for($i=0; $i<$maxsize; $i++) $header .= '<th>&nbsp;</th>';
       $code .= "<thead $thead_class><tr>$header</tr></thead>";
