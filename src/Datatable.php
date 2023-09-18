@@ -116,7 +116,18 @@ class Datatable extends \booosta\ui\UI
                   .attr('type', 'hidden')
                   .attr('name', this.name)
                   .val(this.value)
-      ); } }); }); ";
+      ); } }); 
+
+      params = $('form:checkbox');
+      $.each(params, function() { 
+        console.log('name: ' + this.name + ', checked: ' + this.checked); 
+        if(this.checked && !$.contains(document, form[this.name])){
+            $(form).append(
+               $('<input>')
+                  .attr('type', 'hidden')
+                  .attr('name', this.name)
+                  .val('on')
+      )} }) }); ";
       
     if(is_object($this->topobj) && is_a($this->topobj, '\booosta\webapp\webapp')):
       $this->topobj->add_jquery_ready($code);
