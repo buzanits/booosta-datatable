@@ -17,8 +17,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.0.0",
-        "datatables.net/datatables.net-dt": "dev-master",
-        "booosta/webapp": "dev-master",
-        "booosta/ui": "dev-master"
+        "datatables.net/datatables.net-dt": "^4.0",
+        "booosta/webapp": "^4.0",
+        "booosta/ui": "^4.0"
     }
 }
